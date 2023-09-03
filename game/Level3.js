@@ -112,7 +112,6 @@ class Level3 extends Phaser.Scene {
     self.appleAttackPhysics = self.physics.add.collider(self.appleAttacks, self.player, function (appleAttack, player) {
       if (appleAttack.destroyCounter === 0) {
         self.damage();
-        self.AgentDamageSound.play();
         appleAttack.destroyAttack();
       }
     }, null, self);
@@ -279,6 +278,7 @@ class Level3 extends Phaser.Scene {
   damage() {
     if (!this.tookDamage) {
       var self = this;
+      self.AgentDamageSound.play();
       var invincibleBool = false;
       var justTookDamage = setInterval(function () {
         if (self.player.alpha === 1) {

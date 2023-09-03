@@ -194,7 +194,6 @@ class Apple extends Phaser.GameObjects.Sprite {
 
   damage() {
     if (!this.tookDamage) {
-      console.log('damage');
       var self = this;
       self.justTookDamage = setInterval(function () {
         if (self.alpha === 1) {

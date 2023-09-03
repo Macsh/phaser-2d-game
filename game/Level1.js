@@ -127,6 +127,8 @@ class Level1 extends Phaser.Scene {
     if (!this.rooms) {
       if (this.sebLocation === 'cafetaria-talkable') {
         this.displayTalkable = true;
+      } else {
+        this.displayTalkable = false;
       }
       this.npcVisible = true;
       RoomUtils.changeRoomConditions(this);
@@ -153,12 +155,6 @@ class Level1 extends Phaser.Scene {
       var npc = this.talkables.getChildren()[i];
       npc.update();
     }
-
-    // DEBUG ONLY - REMOVE LATER
-    // console.log([
-    //   `screen x: ${this.player.x}`,
-    //   `screen y: ${this.player.y}`,
-    // ]);
   }
 
   attack() {

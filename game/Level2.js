@@ -125,6 +125,7 @@ class Level2 extends Phaser.Scene {
       RoomUtils.changeRoom(self, parseInt(self.scene.get('level1Scene').sebLocation.at(-1)), self.scene.get('level1Scene').sebLastLocation[0], self.scene.get('level1Scene').sebLastLocation[1]);
     }
     self.Level2Sound = self.sound.add("level2-music", { loop: true });
+    self.Level2Sound.volume = 0.5;
     self.Level2Sound.play();
     self.OpenDoorSound = self.sound.add("open-door", { loop: false });
     self.CloseDoorSound = self.sound.add("close-door", { loop: false });
@@ -146,6 +147,8 @@ class Level2 extends Phaser.Scene {
       this.nextLevelText.y = this.cameras.main._scrollY + 450;
       if (Phaser.Input.Keyboard.JustDown(this.enter)) {
         clearInterval(this.time);
+        clearInterval(this.invisibleTime);
+        clearInterval(this.becomeVisible);
         this.Level2Sound.stop();
         this.scene.start('level3Intro');
       }
@@ -188,11 +191,6 @@ class Level2 extends Phaser.Scene {
       var number = this.phone.getChildren()[i];
       number.update();
     }
-
-    // console.log([
-    //   `screen x: ${this.player.x}`,
-    //   `screen y: ${this.player.y}`,
-    // ]);
   }
 
   spawnNumbers() {
@@ -218,7 +216,7 @@ class Level2 extends Phaser.Scene {
     if (!this.isInvisible && this.invisibleTimer === 0) {
       var self = this;
       self.InvisibilitySpellSound.play();
-      var becomeVisible = setInterval(function () {
+      self.becomeVisible = setInterval(function () {
         self.player.alpha = 1;
         self.isInvisible = false;
         self.playerNpcsCollider = self.physics.add.collider(self.player, self.npcs, function (player, npc) {
@@ -237,7 +235,7 @@ class Level2 extends Phaser.Scene {
       self.invisibleTime = setInterval(function () {
         self.invisibleTimer++;
         if (self.invisibleTimer >= 5 && self.invisibleTimer < 10) {
-          clearInterval(becomeVisible);
+          clearInterval(self.becomeVisible);
           self.transparentText.text = "Recharge invisibilité... " + (10 - self.invisibleTimer);
         } else if (self.invisibleTimer === 10) {
           clearInterval(self.invisibleTime);

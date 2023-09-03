@@ -5,6 +5,12 @@ class Level2 extends Phaser.Scene {
 
   preload() {
     this.load.image('map-level-1', 'assets/map-base-level1.png');
+    this.load.audio("level2-music", "assets/level2.mp3");
+    this.load.audio("open-door", "assets/open-door.mp3");
+    this.load.audio("close-door", "assets/close-door.mp3");
+    this.load.audio("invisibility_spell", "assets/invisibility_spell.wav")
+    this.load.audio("invisibility_available", "assets/invisibility_available.wav")
+    this.load.audio("numbers_collect", "assets/numbers_collect.wav")
     this.load.spritesheet("map-level1-rooms", "assets/map-level1-rooms.png", {
       frameWidth: 700,
       frameHeight: 600,
@@ -59,6 +65,7 @@ class Level2 extends Phaser.Scene {
     self.number9 = self.add.sprite(2000, 2000, 'numbers', 9);
     self.numbers = self.add.group();
     self.phone = self.add.group();
+    self.NumbersCollectSound = self.sound.add("numbers_collect", { loop: false });
     self.spawnNumbers();
     if (self.anims) {
       self.anims.remove("left");
@@ -66,6 +73,7 @@ class Level2 extends Phaser.Scene {
       self.anims.remove("forward");
       self.anims.remove("backward");
       self.anims.remove("idle");
+      self.anims.remove("attack_anim");
     }
     if (self.scene.get('level1Scene').sebLastLocation && self.scene.get('level1Scene').sebLocation === 'cafetaria-talkable') {
       self.player = self.physics.add.sprite(self.scene.get('level1Scene').sebLastLocation[0], self.scene.get('level1Scene').sebLastLocation[1], 'player-seb', 1);
@@ -107,6 +115,7 @@ class Level2 extends Phaser.Scene {
     }, null, self);
     self.physics.add.collider(self.player, self.numbers, function (player, number) {
       self.foundNumbers.push(number.index);
+      self.NumbersCollectSound.play();
       number.destroy();
     }, null, self);
     self.cameras.main.setBounds(0, 0, 998, 1610);
@@ -115,6 +124,12 @@ class Level2 extends Phaser.Scene {
     if (self.scene.get('level1Scene').sebLocation && self.scene.get('level1Scene').sebLocation !== 'cafetaria-talkable') {
       RoomUtils.changeRoom(self, parseInt(self.scene.get('level1Scene').sebLocation.at(-1)), self.scene.get('level1Scene').sebLastLocation[0], self.scene.get('level1Scene').sebLastLocation[1]);
     }
+    self.Level2Sound = self.sound.add("level2-music", { loop: true });
+    self.Level2Sound.play();
+    self.OpenDoorSound = self.sound.add("open-door", { loop: false });
+    self.CloseDoorSound = self.sound.add("close-door", { loop: false });
+    self.InvisibilitySpellSound = self.sound.add("invisibility_spell", { loop: false });
+    self.InvisibilityAvailableSound = self.sound.add("invisibility_available", { loop: false });
   }
 
   update() {
@@ -131,6 +146,7 @@ class Level2 extends Phaser.Scene {
       this.nextLevelText.y = this.cameras.main._scrollY + 450;
       if (Phaser.Input.Keyboard.JustDown(this.enter)) {
         clearInterval(this.time);
+        this.Level2Sound.stop();
         this.scene.start('level3Intro');
       }
     } else {
@@ -201,6 +217,7 @@ class Level2 extends Phaser.Scene {
   becomeTransparent() {
     if (!this.isInvisible && this.invisibleTimer === 0) {
       var self = this;
+      self.InvisibilitySpellSound.play();
       var becomeVisible = setInterval(function () {
         self.player.alpha = 1;
         self.isInvisible = false;
@@ -224,6 +241,7 @@ class Level2 extends Phaser.Scene {
           self.transparentText.text = "Recharge invisibilité... " + (10 - self.invisibleTimer);
         } else if (self.invisibleTimer === 10) {
           clearInterval(self.invisibleTime);
+          self.InvisibilityAvailableSound.play();
           self.transparentText.text = "";
           self.invisibleTimer = 0;
         }

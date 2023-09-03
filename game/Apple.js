@@ -78,6 +78,8 @@ class Apple extends Phaser.GameObjects.Sprite {
       this.counter++;
       clearInterval(self.attackTimer);
       this.scene.physics.world.disableBody(this.body);
+      this.scene.AppleDeathSound.play();
+      this.scene.AppleExplodeSound.play();
 
       var timer = setInterval(() => {
         const min = -20;
@@ -166,10 +168,12 @@ class Apple extends Phaser.GameObjects.Sprite {
       valueY = self.target.y + 60;
     }
     if (self.life > 15) {
+      self.scene.AppleAttackSound.play();
       var attack = new AppleAttack(self.scene, valueX, valueY);
       var attack2 = new AppleAttack(this.scene, valueX, valueY - 120);
       var attack3 = new AppleAttack(this.scene, valueX, valueY + 120);
     } else if (self.life > 10) {
+      self.scene.AppleAttackSound.play();
       var attack = new AppleAttack(self.scene, valueX, valueY);
       var attack2 = new AppleAttack(this.scene, valueX, valueY - 120);
       var attack3 = new AppleAttack(this.scene, valueX, valueY + 120);
@@ -177,6 +181,7 @@ class Apple extends Phaser.GameObjects.Sprite {
       var attack5 = new AppleAttack(this.scene, valueX, valueY + 60);
     }
     else {
+      self.scene.AppleAttackSound.play();
       var attack = new AppleAttack(self.scene, valueX, valueY);
       var attack2 = new AppleAttack(this.scene, valueX, valueY - 120);
       var attack3 = new AppleAttack(this.scene, valueX, valueY + 120);

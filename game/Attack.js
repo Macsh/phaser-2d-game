@@ -1,6 +1,5 @@
 class Attack extends Phaser.GameObjects.Sprite{
   constructor(scene){
-
     var x = scene.player.x;
     var y = scene.player.y - 16;
     super(scene, x, y, "attack");

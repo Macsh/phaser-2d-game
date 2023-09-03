@@ -4,6 +4,10 @@ class Level1 extends Phaser.Scene {
   }
 
   preload() {
+    this.load.audio("level1-music", "assets/level1.mp3");
+    this.load.audio("attack-hugo", "assets/attack-hugo.mp3");
+    this.load.audio("open-door", "assets/open-door.mp3");
+    this.load.audio("close-door", "assets/close-door.mp3");
     this.load.image('map-level-1', 'assets/map-base-level1.png');
     this.load.spritesheet("map-level1-rooms", "assets/map-level1-rooms.png", {
       frameWidth: 700,
@@ -96,6 +100,12 @@ class Level1 extends Phaser.Scene {
     self.cameras.main.setBounds(0, 0, 998, 1610);
     self.cameras.main.startFollow(self.player);
     self.cameras.main.setZoom(2.5);
+    self.Level1Sound = self.sound.add("level1-music", { loop: true });
+    self.Level1Sound.volume = 0.5;
+    self.Level1Sound.play();
+    self.AttackHugoSound = self.sound.add("attack-hugo", { loop: false });
+    self.OpenDoorSound = self.sound.add("open-door", { loop: false });
+    self.CloseDoorSound = self.sound.add("close-door", { loop: false });
   }
 
   update() {
@@ -106,6 +116,7 @@ class Level1 extends Phaser.Scene {
       if (Phaser.Input.Keyboard.JustDown(this.enter)) {
         clearInterval(this.time);
         this.sebLastLocation = [this.player.x, this.player.y];
+        this.Level1Sound.stop();
         this.scene.start('level2Intro');
       }
     } else {
@@ -151,6 +162,7 @@ class Level1 extends Phaser.Scene {
   }
 
   attack() {
+    this.AttackHugoSound.play();
     var attack = new Attack(this);
   }
 

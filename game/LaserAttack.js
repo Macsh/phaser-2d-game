@@ -9,12 +9,11 @@ class LaserAttack extends Phaser.GameObjects.Sprite{
       x = scene.player.x + 24;
     }
     var y = scene.player.y + 5;
-    super(scene, x, y, "attack");
+    super(scene, x, y, "laser-turn-on");
     scene.physics.world.enableBody(this);
     scene.add.existing(this);
     this.angle = scene.player.flipX ? 90 : -90;
-    this.displayWidth = 25;
-    this.displayHeight = 25;
+    this.setScale(0.7);
     this.body.setSize(60, 10, false);
     this.body.setOffset(-20, 25) ;
     this.counter = 0;
@@ -30,6 +29,7 @@ class LaserAttack extends Phaser.GameObjects.Sprite{
       this.counter++;
       this.play("deactivate_attack");
       this.once('animationcomplete', () => {
+        this.scene.AgentAttackSound.stop();
         this.destroy();
       })
     }

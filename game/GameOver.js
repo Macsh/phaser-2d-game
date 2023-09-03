@@ -12,6 +12,9 @@ class GameOver extends Phaser.Scene {
 
   update() {
     if (Phaser.Input.Keyboard.JustDown(this.enter)) {
+      if (this.scene.get('level3Scene').GameOverSound) {
+        this.scene.get('level3Scene').GameOverSound.stop();
+      }
       this.scene.start('level3Scene');
     }
   }

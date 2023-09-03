@@ -1,4 +1,5 @@
 class RoomUtils {
+
   static isPlayerAtDoor(scene, doorX, doorY) {
     const distanceThreshold = 7; // Ajustez la distance seuil selon votre jeu
 
@@ -9,18 +10,25 @@ class RoomUtils {
   }
 
   static changeRoomConditions(scene) {
+
     if (this.isPlayerAtDoor(scene, 232.16, 194.5)) {
       this.changeRoom(scene, 1);
+      scene.OpenDoorSound.play();
     } else if (this.isPlayerAtDoor(scene, 650.83, 194.5)) {
       this.changeRoom(scene, 2);
+      scene.OpenDoorSound.play();
     } else if (this.isPlayerAtDoor(scene, 86.16, 534.5)) {
       this.changeRoom(scene, 3);
+      scene.OpenDoorSound.play();
     } else if (this.isPlayerAtDoor(scene, 811.5, 534.5)) {
       this.changeRoom(scene, 4);
+      scene.OpenDoorSound.play();
     } else if (this.isPlayerAtDoor(scene, 91.5, 1101.5)) {
       this.changeRoom(scene, 5);
+      scene.OpenDoorSound.play();
     } else if (this.isPlayerAtDoor(scene, 811.5, 1101.5)) {
       this.changeRoom(scene, 6);
+      scene.OpenDoorSound.play();
     }
   }
 
@@ -30,31 +38,37 @@ class RoomUtils {
       scene.rooms.name === "room1"
     ) {
       this.changeRoom(scene, 7, 232.16, 194.5);
+      scene.CloseDoorSound.play();
     } else if (
       this.isPlayerAtDoor(scene, 540, 177) &&
       scene.rooms.name === "room2"
     ) {
       this.changeRoom(scene, 7, 650.83, 194.5);
+      scene.CloseDoorSound.play();
     } else if (
       this.isPlayerAtDoor(scene, 586, 247) &&
       scene.rooms.name === "room3"
     ) {
       this.changeRoom(scene, 7, 86.16, 534.5);
+      scene.CloseDoorSound.play();
     } else if (
       this.isPlayerAtDoor(scene, 175, 237) &&
       scene.rooms.name === "room4"
     ) {
       this.changeRoom(scene, 7, 811.5, 534.5);
+      scene.CloseDoorSound.play();
     } else if (
       this.isPlayerAtDoor(scene, 540, 177) &&
       scene.rooms.name === "room5"
     ) {
       this.changeRoom(scene, 7, 91.5, 1101.5);
+      scene.CloseDoorSound.play();
     } else if (
       this.isPlayerAtDoor(scene, 220, 187) &&
       scene.rooms.name === "room6"
     ) {
       this.changeRoom(scene, 7, 811.5, 1101.5);
+      scene.CloseDoorSound.play();
     }
   }
 

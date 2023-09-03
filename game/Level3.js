@@ -4,6 +4,15 @@ class Level3 extends Phaser.Scene {
   }
 
   preload() {
+    this.load.audio("level3-music", "assets/level3.mp3");
+    this.load.audio("apple-attack", "assets/apple_attack.wav");
+    this.load.audio("apple-damage", "assets/apple_damage.wav");
+    this.load.audio("apple-death", "assets/apple_death.wav");
+    this.load.audio("apple-explode", "assets/apple_explosion.wav");
+    this.load.audio("agent-attack", "assets/agent_attack.flac");
+    this.load.audio("agent-damage", "assets/agent_damage.wav");
+    this.load.audio("agent-death", "assets/agent_death.mp3");
+    this.load.audio("game-over", "assets/gameover.mp3");
     this.load.image('map-level3', 'assets/map-level3.png', { frameWidth: 768, frameHeight: 299 });
     this.load.spritesheet('agent-idle', 'assets/agent enedis/agent-idle.png', { frameWidth: 16, frameHeight: 28 });
     this.load.spritesheet('agent-run', 'assets/agent enedis/agent-run.png', { frameWidth: 16, frameHeight: 28 });
@@ -88,7 +97,7 @@ class Level3 extends Phaser.Scene {
     self.physics.add.collider(self.apple, self.background);
     self.attackPhysics = self.physics.add.collider(self.attacks, self.apple, function (attack, apple) {
       apple.damage();
-      attack.destroy();
+      self.AppleDamageSound.play();
     }, null, self);
     self.attackPhysics = self.physics.add.collider(self.attacks, self.appleAttacks, function (attack, appleAttack) {
       if (appleAttack.destroyCounter === 0) {
@@ -103,6 +112,7 @@ class Level3 extends Phaser.Scene {
     self.appleAttackPhysics = self.physics.add.collider(self.appleAttacks, self.player, function (appleAttack, player) {
       if (appleAttack.destroyCounter === 0) {
         self.damage();
+        self.AgentDamageSound.play();
         appleAttack.destroyAttack();
       }
     }, null, self);
@@ -116,6 +126,17 @@ class Level3 extends Phaser.Scene {
     self.life = 20;
     new Apple(self);
     this.displayHearts();
+    self.Level3Sound = self.sound.add("level3-music", { loop: true });
+    self.Level3Sound.volume = 0.5;
+    self.Level3Sound.play();
+    self.AppleAttackSound = self.sound.add("apple-attack", { loop: false });
+    self.AppleDamageSound = self.sound.add("apple-damage", { loop: false });
+    self.AppleDeathSound = self.sound.add("apple-death", { loop: false });
+    self.AppleExplodeSound = self.sound.add("apple-explode", { loop: false });
+    self.AgentAttackSound = self.sound.add("agent-attack", { loop: true });
+    self.AgentDamageSound = self.sound.add("agent-damage", { loop: false });
+    self.AgentDeathSound = self.sound.add("agent-death", { loop: false });
+    self.GameOverSound = self.sound.add("game-over", { loop: false });
   }
 
   update() {
@@ -155,14 +176,18 @@ class Level3 extends Phaser.Scene {
 
     if (this.bossDefeated && this.counter === 0) {
       this.counter++;
+      var self = this;
+      this.AppleExplodeSound.stop();
       var timer = setInterval(() => {
         clearInterval(timer);
-        this.scene.start('endingScene');
+        self.scene.start('endingScene');
+        self.Level3Sound.stop();
       }, 3000);
     }
 
     if (this.life <= 0 && this.counter === 0) {
       this.counter++;
+      this.AgentDeathSound.play();
       for (var i = 0; i < this.apple.getChildren().length; i++) {
         var apple = this.apple.getChildren()[i];
         clearInterval(apple.attackTimer1);
@@ -177,11 +202,15 @@ class Level3 extends Phaser.Scene {
         var appleAttack = this.appleAttacks.getChildren()[i];
         appleAttack.destroy();
       }
+      this.Level3Sound.stop();
+      this.AgentAttackSound.stop();
+      this.GameOverSound.play();
       this.scene.start('gameOverScene');
     }
   }
 
   attack() {
+    this.AgentAttackSound.play();
     var attack = new LaserAttack(this);
   }
 
